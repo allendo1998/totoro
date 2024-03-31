@@ -1,15 +1,28 @@
-import { searchAnime, getSpotlight } from "../utils/api";
+import { searchAnime } from "../utils/api";
 import { use } from "react";
 import { Navbar } from "../components/navbar";
 import Link from "next/link";
+import { AnimeCard } from "../components/animeCard";
+import { ErrorPage } from "../components/errorPage";
 
 const Search = (props) => {
   const query = props.searchParams.query;
   const pageRequest = props.searchParams.page;
   const result = use(searchAnime(query, pageRequest));
 
+  if (result === 0) {
+    return (
+      <div className="bg-[#242428]">
+        <Navbar search={query} />
+        <div className="bg-[#242428] flex flex-col gap-10 py-12 px-10">
+          <h1 className="text-lg">Couldn't find anything</h1>
+        </div>
+      </div>
+    );
+  }
+
   if (result === -1) {
-    return <h1>Couldnt find anything</h1>;
+    return <ErrorPage />;
   }
 
   const currentPage = result.currentPage;
@@ -18,33 +31,7 @@ const Search = (props) => {
   function getResultData() {
     let list = [];
     for (var i = 0; i < result.results.length; i++) {
-      list.push(
-        <Link
-          href={{
-            pathname: '/watch',
-            query: {
-              malId: result.results[i].malId,
-              id: result.results[i].id,
-              number: 1
-            }
-          }}
-          key={result.results[i].malId}
-          className="w-28 md:w-44 xl:w-36 md:hover:scale-150 md:hover:z-10 transform transition duration-200"
-        >
-          <div className="h-36 md:h-64 xl:h-52">
-            <img
-              className="rounded-md w-full h-full object-cover	"
-              src={result.results[i].image}
-              alt="Info card image"
-            />
-          </div>
-          <h2 className="text-sm leading-tight text-[#73787B] mt-2.5 line-clamp-2">
-            {result.results[i].title.userPreferred
-              ? result.results[i].title.userPreferred
-              : result.results[i].title.english}
-          </h2>
-        </Link>
-      );
+      list.push(<AnimeCard key={i} props={result.results[i]} />);
     }
     return list;
   }

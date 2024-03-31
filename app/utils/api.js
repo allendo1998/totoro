@@ -1,8 +1,10 @@
-import { ANIME } from "@consumet/extensions";
 import { META } from "@consumet/extensions";
+import { ANIME } from "@consumet/extensions";
 
 const anilist = new META.Anilist();
 const mal = new META.Myanimelist();
+const gogoanime = new ANIME.Gogoanime();
+const anify = new ANIME.Anify();
 
 export async function getTrendingAnime() {
     try {
@@ -39,7 +41,7 @@ export async function searchAnime(query, page) {
         const data = await anilist.search(query, page);
         
         if (data.results?.length === 0) {
-            return -1;
+            return 0;
         }
         return data;
     } catch (e) {
@@ -94,4 +96,10 @@ export async function getEpisodeSource(id) {
     } catch (e) {
         return -1;
     }
+}
+
+export async function getInfo(id) {
+    console.log("id is : " + id);
+    const hi = anify.fetchAnimeInfo(id);
+    return hi;
 }

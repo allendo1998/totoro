@@ -1,4 +1,4 @@
-import { getAnimeInfo, getEpisodeSource, getEpisodes } from "../utils/api";
+import { getAnimeInfo, getEpisodeSource, getEpisodeSourceTest, getEpisodes } from "../utils/api";
 import Link from "next/link";
 import { Navbar } from "../components/navbar";
 import VideoPlayer from "../components/videoPlayer";
