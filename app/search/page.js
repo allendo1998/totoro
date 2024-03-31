@@ -15,7 +15,7 @@ const Search = (props) => {
       <div className="bg-[#242428]">
         <Navbar search={query} />
         <div className="bg-[#242428] flex flex-col gap-10 py-12 px-10">
-          <h1 className="text-lg">Couldn't find anything</h1>
+          <h1 className="text-lg">Couldn&apost find anything</h1>
         </div>
       </div>
     );
