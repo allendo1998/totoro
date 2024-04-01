@@ -1,4 +1,4 @@
-import { getAnimeInfo, getEpisodeSource, getEpisodeSourceTest, getEpisodes } from "../utils/api";
+import { getAnimeInfo, getEpisodeSource, getEpisodeSources } from "../utils/api";
 import Link from "next/link";
 import { Navbar } from "../components/navbar";
 import VideoPlayer from "../components/videoPlayer";
@@ -7,18 +7,10 @@ import VideoPlayer from "../components/videoPlayer";
 async function watch(props) {
   const query = props.searchParams.query;
   const number = props.searchParams.number;
-  let malInfo = await getEpisodes(props.searchParams.malId);
   const animeInfo = await getAnimeInfo(props.searchParams.id);
-  let episodeSource = await getEpisodeSource(malInfo[number - 1].id);
-
-  if (episodeSource === -1) {
-    console.log('no sub found');
-    malInfo = await getEpisodes(props.searchParams.malId, true);
-    var newId = malInfo[number - 1].id.replace('-dub','');
-    episodeSource = await getEpisodeSource(newId);
-    console.log(episodeSource);
-  }
-    
+  const episodeList = await getEpisodeSources(props.searchParams.id);
+  const episodeSource = await getEpisodeSource(episodeList[number - 1].id);
+ 
   function getAnimInfoData() {
     return (
       <div>
@@ -32,8 +24,7 @@ async function watch(props) {
               : animeInfo.title.english}
           </div>
           <p className="mt-2 text-slate-500">
-            {animeInfo.type} &#183; {animeInfo.status} &#183;{" "}
-            {animeInfo.episodes.length} eps
+            {animeInfo.type} &#183; {animeInfo.status}
           </p>
         </div>
       </div>
@@ -43,8 +34,8 @@ async function watch(props) {
   function getEpisodeList() {
     let list = [];
     let style;
-    for (var i = 0; i < malInfo.length; i++) {
-      if (malInfo[i].number.toString() === props.searchParams.number) {
+    for (var i = 0; i < episodeList.length; i++) {
+      if (episodeList[i].number.toString() === props.searchParams.number) {
         style = "w-full border-b-2 border-b-[#333] bg-[#333] px-8 py-5"
       } else {
         style = "w-full border-b-2 border-b-[#333] px-8 py-5";
@@ -55,17 +46,16 @@ async function watch(props) {
           href={{
             pathname: "/watch",
             query: {
-              malId: props.searchParams.malId,
               id: props.searchParams.id,
-              number: malInfo[i].number
+              number: episodeList[i].number
             },
           }}
           key={i}
         >
           <div className={style}>
           <p>
-            {malInfo[i].number}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {malInfo[i].title}
+            {episodeList[i].number}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {episodeList[i].title}
           </p>
           </div>
         </Link>
@@ -85,7 +75,6 @@ async function watch(props) {
           href={{
             pathname: "/watch",
             query: {
-              malId: relations[i].malId,
               id: relations[i].id,
             },
           }}
@@ -111,11 +100,12 @@ async function watch(props) {
   }
 
   return (
-    <div className="bg-[#242428]">
+    <div className="bg-[#242428] pb-5">
       <Navbar search={query}/>
       <div className="flex flex-col gap-5 justify-items-center 2xl:px-96">
         <VideoPlayer url={episodeSource}/>
         {getAnimInfoData()}
+        <h2 className="px-8 pb-3 text-xl font-bold">episodes</h2>
         <ul className="h-96 overflow-y-auto">{getEpisodeList()}</ul>
         <div>
           <h2 className="px-8 pb-3 text-xl font-bold">Related anime</h2>

@@ -9,7 +9,6 @@ export function AnimeCard({props}) {
       href={{
         pathname: "/watch",
         query: {
-          malId: props.malId,
           id: props.id,
           number: 1,
         },

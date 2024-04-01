@@ -1,10 +1,6 @@
 import { META } from "@consumet/extensions";
-import { ANIME } from "@consumet/extensions";
 
 const anilist = new META.Anilist();
-const mal = new META.Myanimelist();
-const gogoanime = new ANIME.Gogoanime();
-const anify = new ANIME.Anify();
 const url = "https://consumet-api-nine-dun.vercel.app/";
 
 export async function getTrendingAnime() {
@@ -51,20 +47,9 @@ export async function searchAnime(query, page) {
   }
 }
 
-export async function getEpisodes(malId, dub = false) {
-  try {
-    const episodeList = await fetch(url + `meta/mal/info/${malId}?dub=${dub}`);
-    const data = await episodeList.json();
-    return data.episodes;
-  } catch (e) {
-    console.log("Message " + e.message);
-    return -1;
-  }
-}
-
 export async function getAnimeInfo(id) {
   try {
-    const res = await anilist.fetchAnimeInfo(id);
+    const res = await anilist.fetchAnilistInfoById(id);
     return res;
   } catch (e) {
     return -1;
@@ -75,7 +60,7 @@ export async function getEpisodeSource(id) {
   let backUp;
   let bestQuality;
   try {
-    const res = await mal.fetchEpisodeSources(id);
+    const res = await anilist.fetchEpisodeSources(id);
 
     if (res.sources) {
       for (var i = res.sources.length - 1; i > 0; i--) {
@@ -91,16 +76,23 @@ export async function getEpisodeSource(id) {
       }
     }
     if (bestQuality) {
+      console.log('hls link ' + bestQuality);
       return bestQuality;
     }
+    console.log('hls link: ' + backUp);
     return backUp;
   } catch (e) {
     return -1;
   }
 }
 
-export async function getInfo(id) {
-  console.log("id is : " + id);
-  const hi = anify.fetchAnimeInfo(id);
-  return hi;
+export async function getEpisodeSources(id, dub = false) {
+  console.log('id is ' + id);
+  try {
+    const res = await fetch(url + `meta/anilist/episodes/${id}?dub=${dub}`);
+    const data = await res.json();
+    return data;
+  } catch(e) {
+    return -1;
+  }
 }
