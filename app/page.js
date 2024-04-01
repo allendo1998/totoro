@@ -8,6 +8,7 @@ export default async function Home(props) {
   let search = props.searchParams.query;
 
   const data = await getTrendingAnime();
+  console.log(data);
   const spotLightData = await getSpotlight();
 
   if (data === -1 || spotLightData === -1) {

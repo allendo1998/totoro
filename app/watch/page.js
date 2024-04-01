@@ -9,12 +9,12 @@ async function watch(props) {
   const number = props.searchParams.number;
   let malInfo = await getEpisodes(props.searchParams.malId);
   const animeInfo = await getAnimeInfo(props.searchParams.id);
-  let episodeSource = await getEpisodeSource(malInfo.episodes[number - 1].id);
+  let episodeSource = await getEpisodeSource(malInfo[number - 1].id);
 
   if (episodeSource === -1) {
     console.log('no sub found');
     malInfo = await getEpisodes(props.searchParams.malId, true);
-    var newId = malInfo.episodes[number - 1].id.replace('-dub','');
+    var newId = malInfo[number - 1].id.replace('-dub','');
     episodeSource = await getEpisodeSource(newId);
     console.log(episodeSource);
   }
@@ -42,10 +42,9 @@ async function watch(props) {
 
   function getEpisodeList() {
     let list = [];
-    let episodes = malInfo.episodes;
     let style;
-    for (var i = 0; i < episodes.length; i++) {
-      if (episodes[i].number.toString() === props.searchParams.number) {
+    for (var i = 0; i < malInfo.length; i++) {
+      if (malInfo[i].number.toString() === props.searchParams.number) {
         style = "w-full border-b-2 border-b-[#333] bg-[#333] px-8 py-5"
       } else {
         style = "w-full border-b-2 border-b-[#333] px-8 py-5";
@@ -58,15 +57,15 @@ async function watch(props) {
             query: {
               malId: props.searchParams.malId,
               id: props.searchParams.id,
-              number: episodes[i].number
+              number: malInfo[i].number
             },
           }}
           key={i}
         >
           <div className={style}>
           <p>
-            {episodes[i].number}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {episodes[i].title}
+            {malInfo[i].number}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {malInfo[i].title}
           </p>
           </div>
         </Link>
