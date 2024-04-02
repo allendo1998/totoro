@@ -153,7 +153,7 @@ async function watch(props) {
     <div className="bg-[#242428] pb-5">
       <Navbar search={query} />
       <div className="flex flex-col gap-5 justify-items-center 2xl:px-96">
-        <VideoPlayer url={episodeSource} id={props.searchParams.id} number={props.searchParams.number} />
+        <VideoPlayer url={episodeSource} title={episodeList[number - 1].title} id={props.searchParams.id} number={props.searchParams.number} />
         {getAnimInfoData()}
         {subOrDub()}
         <h2 className="px-8 pb-3 text-xl font-bold text-white">episodes</h2>
