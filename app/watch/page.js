@@ -97,7 +97,7 @@ async function watch(props) {
               alt="Info card image"
             />
           </div>
-          <h2 className="text-sm leading-tight text-[#73787B] mt-2.5 line-clamp-2">
+          <h2 className="text-sm leading-tight text-white mt-2.5 line-clamp-2">
             {relations[i].title.userPreferred
               ? relations[i].title.userPreferred
               : relations[i].title.english}
@@ -153,7 +153,7 @@ async function watch(props) {
     <div className="bg-[#242428] pb-5">
       <Navbar search={query} />
       <div className="flex flex-col gap-5 justify-items-center 2xl:px-96">
-        <VideoPlayer url={episodeSource} />
+        <VideoPlayer url={episodeSource} id={props.searchParams.id} number={props.searchParams.number} />
         {getAnimInfoData()}
         {subOrDub()}
         <h2 className="px-8 pb-3 text-xl font-bold text-white">episodes</h2>

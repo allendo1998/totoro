@@ -1,21 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
 const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
 
-const VideoPlayer = ({url}) => {
-  const [currentTime, setCurrentTime] = useState(0);
-
-  const handleProgress = ({ playedSeconds }) => {
-    console.log(playedSeconds);
-  };
-
+const VideoPlayer = ({url, id, number}) => {
   return (
     <ReactPlayer
       url={url}
       controls
-      onProgress={handleProgress}
       config={{
         hlsOptions: {
           // Additional hls.js options if needed
