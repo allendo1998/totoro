@@ -35,7 +35,7 @@ export default async function Home(props) {
       <Navbar search={search} />
         {getSpotlightData()}
         <div className="py-12 px-10">
-          <h1 className="mb-5 text-2xl font-bold">Top airing</h1>
+          <h1 className="mb-5 text-2xl font-bold text-white">Top airing</h1>
           <div className="grid gap-y-10 justify-items-center grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8 2xl:grid-cols-10">
             {getTrendingAnimeList()}
           </div>

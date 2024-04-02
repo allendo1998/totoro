@@ -17,15 +17,15 @@ export function Navbar({ search = "", page = 1 }) {
   }, [query, router]);
 
   return (
-    <nav className="py-10 flex flex-col md:flex-row justify-center items-center gap-5">
+    <nav className="py-4 px-16 flex flex-col md:flex-row justify-between items-center gap-5">
       <Link href='/'> 
-        <h1 className="text-2xl font-bold">Totoro</h1>
+        <h1 className="text-2xl font-bold text-white">Totoro</h1>
       </Link>
       <div className="relative">
         <input
           value={input}
           className="appearance-none border-2 pl-10 border-gray-300 hover:border-gray-400 transition-colors rounded-md w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:ring-purple-600 focus:border-purple-600 focus:shadow-outline"
-          id="username"
+          id="search"
           type="text"
           placeholder="Search..."
           onChange={(e) => setInput(e.target.value)}

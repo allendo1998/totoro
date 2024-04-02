@@ -1,16 +1,25 @@
-import { getAnimeInfo, getEpisodeSource, getEpisodeSources } from "../utils/api";
+import {
+  getAnimeInfo,
+  getEpisodeSource,
+  getEpisodeSources,
+} from "../utils/api";
 import Link from "next/link";
 import { Navbar } from "../components/navbar";
 import VideoPlayer from "../components/videoPlayer";
-
+import { ErrorPage } from "../components/errorPage";
 
 async function watch(props) {
   const query = props.searchParams.query;
   const number = props.searchParams.number;
+  const dub = props.searchParams.dub;
   const animeInfo = await getAnimeInfo(props.searchParams.id);
-  const episodeList = await getEpisodeSources(props.searchParams.id);
+  const episodeList = await getEpisodeSources(props.searchParams.id, dub);
+  if (animeInfo === -1 || episodeList === -1) {
+    return <ErrorPage />;
+  }
+
   const episodeSource = await getEpisodeSource(episodeList[number - 1].id);
- 
+
   function getAnimInfoData() {
     return (
       <div>
@@ -36,7 +45,7 @@ async function watch(props) {
     let style;
     for (var i = 0; i < episodeList.length; i++) {
       if (episodeList[i].number.toString() === props.searchParams.number) {
-        style = "w-full border-b-2 border-b-[#333] bg-[#333] px-8 py-5"
+        style = "w-full border-b-2 border-b-[#333] bg-[#333] px-8 py-5";
       } else {
         style = "w-full border-b-2 border-b-[#333] px-8 py-5";
       }
@@ -47,16 +56,16 @@ async function watch(props) {
             pathname: "/watch",
             query: {
               id: props.searchParams.id,
-              number: episodeList[i].number
+              number: episodeList[i].number,
             },
           }}
           key={i}
         >
           <div className={style}>
-          <p>
-            {episodeList[i].number}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {episodeList[i].title}
-          </p>
+            <p className="text-white">
+              {episodeList[i].number}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {episodeList[i].title}
+            </p>
           </div>
         </Link>
       );
@@ -79,11 +88,11 @@ async function watch(props) {
             },
           }}
           key={i}
-          className="w-28 md:hover:scale-150 md:hover:z-10 transform transition duration-200"
+          className="w-28 md:hover:scale-125 md:hover:z-10 transform transition duration-200"
         >
           <div className="h-36">
             <img
-              className="rounded-md w-full h-full object-cover	"
+              className="w-full h-full object-cover	"
               src={relations[i].image}
               alt="Info card image"
             />
@@ -99,16 +108,60 @@ async function watch(props) {
     return list;
   }
 
+  function subOrDub() {
+    let subStyle = 'border-2 border-white py-2 px-4 text-white font-bold uppercase text-xs rounded';
+    let dubStyle = 'border-2 border-white py-2 px-4 text-white font-bold uppercase text-xs rounded';
+
+    if (dub === 'true') {
+      dubStyle = 'bg-[#58A557] py-2 px-4 text-white font-bold uppercase text-xs rounded';
+    } else {
+      subStyle = 'bg-[#58A557] py-2 px-4 text-white font-bold uppercase text-xs rounded';
+    }
+
+    return (
+      <div className="px-8 flex flex-row gap-5">
+        <Link
+          href={{
+            pathname: "/watch",
+            query: {
+              id: props.searchParams.id,
+              number: props.searchParams.number,
+              dub: false,
+            },
+          }}
+        >
+          <p className={subStyle}>Sub</p>
+        </Link>
+
+        <Link
+          href={{
+            pathname: "/watch",
+            query: {
+              id: props.searchParams.id,
+              number: props.searchParams.number,
+              dub: true,
+            },
+          }}
+        >
+          <p className={dubStyle}>Dub</p>
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#242428] pb-5">
-      <Navbar search={query}/>
+      <Navbar search={query} />
       <div className="flex flex-col gap-5 justify-items-center 2xl:px-96">
-        <VideoPlayer url={episodeSource}/>
+        <VideoPlayer url={episodeSource} />
         {getAnimInfoData()}
-        <h2 className="px-8 pb-3 text-xl font-bold">episodes</h2>
+        {subOrDub()}
+        <h2 className="px-8 pb-3 text-xl font-bold text-white">episodes</h2>
         <ul className="h-96 overflow-y-auto">{getEpisodeList()}</ul>
         <div>
-          <h2 className="px-8 pb-3 text-xl font-bold">Related anime</h2>
+          <h2 className="px-8 pb-3 text-xl font-bold text-white">
+            Related anime
+          </h2>
           <div className="grid gap-y-10 justify-items-center grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
             {getRelations()}
           </div>
@@ -116,6 +169,6 @@ async function watch(props) {
       </div>
     </div>
   );
-};
+}
 
 export default watch;
