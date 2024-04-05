@@ -28,7 +28,7 @@ async function watch(props) {
       <div className="bg-[#242428]">
         <Navbar search={query} />
         <div className="bg-[#242428] flex flex-col gap-10 py-12 px-10">
-          <h1 className="text-lg">Couldn't find any episode sources</h1>
+          <h1 className="text-lg">Could not find any episode sources</h1>
         </div>
       </div>
     );
