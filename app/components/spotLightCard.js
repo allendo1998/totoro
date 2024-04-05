@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Description } from "./description";
 
 export function SpotlighCard({ props }) {
   const title = props.title.userPreferred
@@ -6,21 +7,17 @@ export function SpotlighCard({ props }) {
     : props.title.english;
   return (
     <div className="relative">
-      {/* Background image */}
       <img
         className="absolute inset-0 w-full h-full object-cover"
         src={props.cover}
         alt="Background Image"
       />
 
-      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black opacity-60"></div>
 
       <div className="relative z-10 md:w-1/2 text-white py-24 px-10">
         <p className="text-3xl font-bold mb-8">{title}</p>
-        <p className="font-bold text-sm mb-8 line-clamp-4">
-          {props.description}
-        </p>
+        <Description description={props.description} style={'font-bold text-sm mb-8 line-clamp-4'}/>
         <Link
           href={{
             pathname: "/watch",

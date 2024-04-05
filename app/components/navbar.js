@@ -17,14 +17,14 @@ export function Navbar({ search = "", page = 1 }) {
   }, [query, router]);
 
   return (
-    <nav className="py-4 px-16 flex flex-col md:flex-row justify-between items-center gap-5">
+    <nav className="py-5 px-16 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-10">
       <Link href='/'> 
-        <h1 className="text-2xl font-bold text-white">Totoro</h1>
+        <h1 className="text-lg font-bold text-white">Totoro</h1>
       </Link>
       <div className="relative">
         <input
           value={input}
-          className="appearance-none border-2 pl-10 border-gray-300 hover:border-gray-400 transition-colors rounded-md w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:ring-purple-600 focus:border-purple-600 focus:shadow-outline"
+          className="appearance-none bg-[#242428]  w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:shadow-outline border-b-2"
           id="search"
           type="text"
           placeholder="Search..."
@@ -35,23 +35,6 @@ export function Navbar({ search = "", page = 1 }) {
           className="absolute right-0 inset-y-0 flex items-center"
           onClick={() => setInput("")}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="-ml-1 mr-3 h-5 w-5 text-gray-400 hover:text-gray-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </div>
-
-        <div className="absolute left-0 inset-y-0 flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 ml-3 text-gray-400 hover:text-gray-500"

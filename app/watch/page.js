@@ -7,6 +7,9 @@ import Link from "next/link";
 import { Navbar } from "../components/navbar";
 import VideoPlayer from "../components/videoPlayer";
 import { ErrorPage } from "../components/errorPage";
+import { Description } from "../components/description";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 async function watch(props) {
   const query = props.searchParams.query;
@@ -18,7 +21,18 @@ async function watch(props) {
     return <ErrorPage />;
   }
 
-  const episodeSource = await getEpisodeSource(episodeList[number - 1].id);
+  const episodeSource = await getEpisodeSource(episodeList[number - 1]?.id);
+
+  if (episodeSource === -1) {
+    return (
+      <div className="bg-[#242428]">
+        <Navbar search={query} />
+        <div className="bg-[#242428] flex flex-col gap-10 py-12 px-10">
+          <h1 className="text-lg">Couldn't find any episode sources</h1>
+        </div>
+      </div>
+    );
+  }
 
   function getAnimInfoData() {
     return (
@@ -35,6 +49,10 @@ async function watch(props) {
           <p className="mt-2 text-slate-500">
             {animeInfo.type} &#183; {animeInfo.status}
           </p>
+          <Description
+            description={animeInfo.description}
+            style={"mt-2 text-sm text-white"}
+          />
         </div>
       </div>
     );
@@ -64,7 +82,7 @@ async function watch(props) {
           <div className={style}>
             <p className="text-white">
               {episodeList[i].number}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              {episodeList[i].title}
+              <span className="text-sm text-white">{episodeList[i].title}</span>
             </p>
           </div>
         </Link>
@@ -85,6 +103,7 @@ async function watch(props) {
             pathname: "/watch",
             query: {
               id: relations[i].id,
+              number: 1
             },
           }}
           key={i}
@@ -109,13 +128,17 @@ async function watch(props) {
   }
 
   function subOrDub() {
-    let subStyle = 'border-2 border-white py-2 px-4 text-white font-bold uppercase text-xs rounded';
-    let dubStyle = 'border-2 border-white py-2 px-4 text-white font-bold uppercase text-xs rounded';
+    let subStyle =
+      "border-2 border-white py-2 px-4 text-white font-bold uppercase text-xs rounded";
+    let dubStyle =
+      "border-2 border-white py-2 px-4 text-white font-bold uppercase text-xs rounded";
 
-    if (dub === 'true') {
-      dubStyle = 'bg-[#58A557] py-2 px-4 text-white font-bold uppercase text-xs rounded';
+    if (dub === "true") {
+      dubStyle =
+        "bg-[#58A557] py-2 px-4 text-white font-bold uppercase text-xs rounded";
     } else {
-      subStyle = 'bg-[#58A557] py-2 px-4 text-white font-bold uppercase text-xs rounded';
+      subStyle =
+        "bg-[#58A557] py-2 px-4 text-white font-bold uppercase text-xs rounded";
     }
 
     return (
@@ -153,7 +176,14 @@ async function watch(props) {
     <div className="bg-[#242428] pb-5">
       <Navbar search={query} />
       <div className="flex flex-col gap-5 justify-items-center 2xl:px-96">
-        <VideoPlayer url={episodeSource} title={episodeList[number - 1].title} id={props.searchParams.id} number={props.searchParams.number} />
+        <Suspense fallback={<Loading />}>
+          <VideoPlayer
+            url={episodeSource}
+            title={episodeList[number - 1].title}
+            id={props.searchParams.id}
+            number={props.searchParams.number}
+          />
+        </Suspense>
         {getAnimInfoData()}
         {subOrDub()}
         <h2 className="px-8 pb-3 text-xl font-bold text-white">episodes</h2>

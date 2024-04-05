@@ -1,14 +1,13 @@
 import { searchAnime } from "../utils/api";
-import { use } from "react";
 import { Navbar } from "../components/navbar";
 import Link from "next/link";
 import { AnimeCard } from "../components/animeCard";
 import { ErrorPage } from "../components/errorPage";
 
-const Search = (props) => {
+async function Search(props) {
   const query = props.searchParams.query;
   const pageRequest = props.searchParams.page;
-  const result = use(searchAnime(query, pageRequest));
+  const result = await searchAnime(query, pageRequest);
 
   if (result === 0) {
     return (
